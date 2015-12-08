@@ -38,13 +38,16 @@
 	</div>
 	<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
 	<script src="js/index.js"></script>
-	<table width="1200px" class="tableCentre" >
+	<table width="1100px" class="tableCentre" >
 	<tr><td>
 	<div class="fontsforweb_fontid_423">
 	<ul>
 	  <li><a href="#"><font color="000000">Home</a></li>
 	  <li><a href="#"><font color="000000">Your work</a></li>
 	  <li><a href="#"><font color="000000">Search Paper</a></li>
+	  <li><a href="#"><font color="000000">Button 4</a></li>
+	  <li><a href="#"><font color="000000">Button 5</a></li>
+	  <li><a href="#"><font color="000000">Button 6</a></li>
 	</ul>
 	</div>
 	</td><td></td></tr></table>
