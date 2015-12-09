@@ -1,22 +1,33 @@
 <?php
 
-namespace util;
+include_once "../util/autoload.php";
 
 class Util
 {
-    static function gen_uuid()
+
+    /*
+     * $status format:
+     * int
+     * Current Paper [1: abstract, 2: paper, 3: revision] * 10 +
+     * Paper Status [0: pending, 1: accepted, 2: rejected] * 1
+     */
+    static function validatePaperStatus($status)
     {
-        return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+        $stat = intval($status);
+        if (floor($stat / 10) != 1 or floor($stat / 10) != 2 or floor($stat / 10) != 3) {
+            return false;
+        } else {
+            if ($stat % 10 != 0 or $stat % 10 != 1 or $stat % 10 != 2) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
 
-            mt_rand(0, 0xffff),
-
-            mt_rand(0, 0x0fff) | 0x4000,
-
-            mt_rand(0, 0x3fff) | 0x8000,
-
-            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
-        );
+    static function genPaperStatus($submitType, $reviewStatus)
+    {
+        return $submitType * 10 + $reviewStatus;
     }
 
 }

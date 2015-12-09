@@ -1,6 +1,6 @@
 <?php
 
-namespace DB;
+include_once "../util/autoload.php";
 
 class DBHelper
 {
@@ -18,18 +18,18 @@ class DBHelper
     {
         try {
             $connection = self::$connection;
-            $conn = new \PDO($connection["type"] .
+            $conn = new PDO($connection["type"] .
                 ":host=" . $connection["host"] .
                 ";port=" . $connection["port"] .
                 ";dbname=" . $connection["dbname"],
                 $connection["user"],
                 $connection["password"],
                 array(
-                    \PDO::ATTR_PERSISTENT
+                    PDO::ATTR_PERSISTENT
                 )
             );
             return $conn;
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             return -1;
         }
 
