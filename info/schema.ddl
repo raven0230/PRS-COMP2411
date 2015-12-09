@@ -12,12 +12,13 @@ CREATE TABLE Author (
   country VARCHAR(50)  NOT NULL,
   PRIMARY KEY (id)
 );
+CREATE UNIQUE INDEX Author_name_uindex ON Author (name);
 CREATE TABLE Author_Paper (
-  paper_id  INT NOT NULL,
-  author_id INT NOT NULL
+  author_id INT NOT NULL,
+  paper_id  INT NOT NULL
 );
 CREATE INDEX author_id ON Author_Paper (author_id);
-CREATE INDEX paper_id ON Author_Paper (paper_id);
+CREATE INDEX Author_Paper_Paper__fk ON Author_Paper (paper_id);
 CREATE TABLE Conference_Chair (
   title      VARCHAR(100) NOT NULL,
   first_name VARCHAR(50)  NOT NULL,
@@ -52,21 +53,22 @@ CREATE TABLE Paper (
   PRIMARY KEY (id)
 );
 CREATE UNIQUE INDEX unique_id ON Paper (id);
-CREATE INDEX Paper_Track_Chair__fk ON Paper (responsible_chair);
 CREATE TABLE Paper_Keyword (
-  paper_id   INT NOT NULL,
-  keyword_id INT NOT NULL
+  paper_id   INT,
+  keyword_id INT
 );
 CREATE INDEX keyword_id ON Paper_Keyword (keyword_id);
 CREATE INDEX paper_id ON Paper_Keyword (paper_id);
 CREATE TABLE Review_Record (
-  id            INT         NOT NULL,
-  "time"        TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  file          BLOB        NOT NULL,
-  submission_id INT         NOT NULL,
-  reviewer_id   VARCHAR(50) NOT NULL,
-  file_mime     VARCHAR(20) NOT NULL,
-  rating        INT         NOT NULL,
+  id             INT         NOT NULL,
+  file           LONGBLOB,
+  submission_id  INT         NOT NULL,
+  reviewer_id    VARCHAR(50) NOT NULL,
+  file_mime      VARCHAR(20),
+  rating         INT,
+  assigned_time  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  completed_time TIMESTAMP,
+  completed      TINYINT,
   PRIMARY KEY (id)
 );
 CREATE UNIQUE INDEX unique_id ON Review_Record (id);
@@ -108,12 +110,12 @@ CREATE TABLE Submission (
   type         TINYINT     NOT NULL,
   "time"       TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
   file         BLOB        NOT NULL,
-  paper_id     INT         NOT NULL,
   file_mime    VARCHAR(20) NOT NULL,
+  paper_id     INT         NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE UNIQUE INDEX unique_id ON Submission (id);
-CREATE INDEX paper_id ON Submission (paper_id);
+CREATE INDEX Submission_Paper__fk ON Submission (paper_id);
 CREATE TABLE Track_Chair (
   title      VARCHAR(100) NOT NULL,
   first_name VARCHAR(50)  NOT NULL,
@@ -153,4 +155,7 @@ CREATE UNIQUE INDEX unique_id ON organisation (id);
 CREATE TABLE ratings (
   rating INT NOT NULL,
   PRIMARY KEY (rating)
+);
+CREATE TABLE time_tester (
+  "time" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
