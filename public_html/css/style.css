@@ -1,0 +1,322 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Sans-serif;
+  background: #ffffe5;
+}
+
+#wrap {
+  margin: 0 auto 30px;
+}
+
+#regbar {
+  height: 67px;
+  background: #ff9933;
+}
+
+#dynamicFilterWrap {
+  margin: 30px auto 30px;
+}
+
+#dynamicFilter {
+  height: 150px;
+  background: #ffffe5;
+}
+
+#filter{
+  height: 36px;
+  background: #ffffe5;
+}
+
+.filterStyle {
+   width: 240px;
+   height: 34px;
+   overflow: hidden;
+   border: 1px solid #ccc;
+   margin-right: 30px;
+   font-size: 20px;
+   }
+   
+.filterInput{
+   width: 240px;
+   height: 34px;
+   font-size: 20px;
+   }
+
+.filterRemove{
+   width: 34px;
+   height: 34px;
+   position: absolute;
+   right: 60px;
+   }
+
+.filterStyle select {
+   background: transparent;
+   width: 268px;
+   padding: 5px;
+   line-height: 1;
+   border: 0;
+   border-radius: 0;
+   height: 34px;
+   -webkit-appearance: none;
+   }
+   
+.filterStyle option{
+	padding-left: 15px;
+}
+
+.filterStyle optgroup{
+	font-size: 20px;
+}
+
+.filterButton{
+	font-size: 20px;
+}
+
+.acceptButton{
+	position: absolute;
+	font-size: 20px;
+	left: 165px;
+	bottom: 10px;
+}
+
+.reviseButton{
+	position: absolute;
+	font-size: 20px;
+	right: 315px;
+	bottom: 10px;
+}
+
+.rejectButton{
+	position: absolute;
+	font-size: 20px;
+	right: 165px;
+	bottom: 10px;
+}
+
+#leftmargin{
+  margin-left: 50px;
+}
+
+#rightmargin {
+  margin-right: 50px;
+}
+
+@font-face {
+	font-family: 'SansationLight';
+	src: url('http://localhost/prs/SansationLight.eot');
+	src: local('SansationLight'), url('http://localhost/prs/SansationLight.woff') format('woff'), url('http://localhost/prs/SansationLight.ttf') format('truetype');
+}
+
+h2 {
+  padding: 20px;
+  color: #ecf0f1;
+}
+
+fieldset {
+  border: none;
+}
+
+.fontsforweb_fontid_423 {
+	font-family: 'SansationLight' !important;
+}
+
+.login {
+  position: relative;
+  right: 30px;
+  width: 350px;
+  display: none;
+  z-index: 100;
+}
+
+.arrow-up {
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 15px solid #ECF0F1;
+  right: 10%;
+  position: absolute;
+  top: -10px;
+}
+
+.tableCentre {
+    margin:auto;
+  }
+  
+.formholder {
+  background: #ecf0f1;
+  width: 350px;
+  border-radius: 5px;
+  padding-top: 5px;
+}
+.formholder input[type="email"], .formholder input[type="password"] {
+  padding: 7px 5px;
+  margin: 10px 0;
+  width: 96%;
+  display: block;
+  font-size: 18px;
+  border-radius: 5px;
+  border: none;
+  -webkit-transition: 0.3s linear;
+  -moz-transition: 0.3s linear;
+  -o-transition: 0.3s linear;
+  transition: 0.3s linear;
+}
+.formholder input[type="email"]:focus, .formholder input[type="password"]:focus {
+  outline: none;
+  box-shadow: 0 0 1px 1px #1abc9c;
+}
+.formholder input[type="submit"] {
+  background: #1abc9c;
+  padding: 10px;
+  font-size: 20px;
+  display: block;
+  width: 100%;
+  border: none;
+  color: #fff;
+  border-radius: 5px;
+}
+.formholder input[type="submit"]:hover {
+  background: #1bc6a4;
+}
+
+.randompad {
+  padding: 10px;
+}
+
+.green {
+  color: #1abc9c;
+}
+
+.table1{
+	position: relative;
+    margin:auto;
+	width: 1100px;
+}
+
+.table2{
+	border-collapse: collapse;
+	border: 1px solid black;
+}
+
+table.table2 td{
+	border: 1px solid black;
+	padding: 15px;
+}
+
+table.table2 th{
+	border: 1px solid black;
+	padding: 15px;
+}
+
+.table4{
+	border-collapse: collapse;
+	border: 1px solid black;
+}
+
+table.table4 td{
+	position: relative;
+	border: 1px solid black;
+	padding: 15px;
+}
+
+table.table4 th{
+	border: 1px solid black;
+	padding: 15px;
+}
+
+.table3{
+	border-collapse: collapse;
+	border: 1px solid black;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+}
+
+table.table3 td{
+	border: 1px solid black;
+	padding: 15px;
+}
+
+table.table3 th{
+	border: 1px solid black;
+	padding: 15px;
+}
+
+table.table3 a{
+	color: #1a1aff;
+}
+
+table.table3 tr:nth-child(even){
+	background-color: #f2f2f2
+}
+
+table.table3 tr:nth-child(odd){
+	background-color: #FFFFFF
+}
+
+table.table3 tr:not(:first-child):hover{
+	background-color: #f5f5f5
+}
+
+.tableborder{
+	border: 1px solid black;
+	padding: 15px;
+}
+
+
+.height{
+	height: 50px;
+}
+
+a {
+  color: #ecf0f1;
+  text-decoration: none;
+}
+a:hover {
+  color: #1abc9c;
+}
+
+ul {
+    list-style-type: none;
+	position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+ul li {
+    background: #cce5ff;
+    margin: 1px;
+    height: 50px;
+    width: 150px;
+	margin-right: 30px;
+    text-align: center;
+	line-height:3;
+}
+
+.inpage{
+	background: #80beff;
+}
+
+ul li a{
+	display: block;
+}
+
+ul li :hover{
+	background: #80beff;
+}
+
+.navItem > * {
+    color: black;
+    font-size: 1em;
+}
+
+p {
+    padding-top: 1em;
+    padding-bottom:1.5em;
+}
