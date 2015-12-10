@@ -17,7 +17,17 @@
                 </td>
                 <td align="right">
                     <div id="rightmargin">
-                        <h2><a href="#" id="loginform">Login</a></h2>
+                        <?php
+                        if ($_COOKIE['logined']) {
+                            ?>
+                            <h2>Hi, XX</h2>
+                            <?php
+                        } else {
+                            ?>
+                            <h2><a href='#' id="loginform">Login</a></h2>
+                            <?php
+                        }
+                        ?>
                 </td>
             <tr>
                 <td><p>&nbsp </p></td>
@@ -26,6 +36,7 @@
                         <div class="arrow-up"></div>
                         <div class="formholder">
                             <div class="randompad">
+                                <form action="router.php" method="post">
                                 <fieldset>
                                     <label name="email">Email</label>
                                     <input type="email"/>
@@ -34,6 +45,7 @@
                                     <input type="submit" value="Login"/>
 
                                 </fieldset>
+                                </form>
                             </div>
                         </div>
                     </div>

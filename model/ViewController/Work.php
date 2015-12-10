@@ -20,7 +20,7 @@ class Work
             $authors = explode(",", $row['authorsName']);
             $htmlToReturn .= "<tr>";
             $htmlToReturn .= "<td>" . $row["reviewId"] . "</a></td>";
-            $htmlToReturn .= "<td><a href='router.php?reviewerId='>" . $row["paperTitle"] . "</a></td>";
+            $htmlToReturn .= "<td><a href='review.php?reviewId=" . $row['reviewId'] . "'>" . $row["paperTitle"] . "</a></td>";
             $htmlToReturn .= "<td>" . Util::printPrettyAuthorNames($authors) . "</td>";
             $htmlToReturn .= "<td>" . $row["assignedTime"] . "</td>";
             $htmlToReturn .= "<td>" . Util::submitTypeToString($row["type"]) . "</td>";
