@@ -1,6 +1,11 @@
 <?php
 
-include_once "../util/autoload.php";
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+include_once "../model/util/autoload.php";
+
+
 
 class ReviewDB
 {
@@ -12,93 +17,120 @@ class ReviewDB
 
     }
 
-    public function getReviewFile($paperId, $submitType)
+    function checkConn()
     {
-        $stmt = $this->conn->prepare("SELECT Review_Record.file AS 'file', Review_Record.file_mime AS 'mime'
-                           FROM Review_Record, Submission WHERE
-                           Review_Record.submission_id = Submission.id AND Submission.paper_id = :paperId
-                           AND Submission.type = :submitType");
+        if (gettype($this->conn) != 'integer') {
+            return "Connection Succeeded.";
+        } else {
+            return "Connection Failed.";
+        }
+    }
 
-        $stmt->bindValue(":paperId", $paperId);
-        $stmt->bindValue(":submitType", $submitType);
+    public function getReviewFile($reviewId)
+    {
+        try {
+            $stmt = $this->conn->prepare("SELECT file, file_mime FROM Review_Record
+                                      WHERE id = :reviewId");
+            $stmt->bindValue(":reviewId", $reviewId, PDO::PARAM_INT);
 
-        if ($stmt->execute()) {
-            $stmt->bindColumn("file", $file);
-            $stmt->bindColumn("mime", $file_mime);
-            if ($stmt->fetch()) {
-                return array($file, $file_mime);
+            if ($stmt->execute()) {
+                $stmt->bindColumn("file", $file);
+                $stmt->bindColumn("mime", $file_mime);
+                if ($stmt->fetch(PDO::FETCH_BOUND)) {
+                    return array($file, $file_mime);
+                } else {
+                    return 0;
+                }
             } else {
                 return -1;
             }
-        } else {
+        } catch (PDOException $e) {
             return -1;
         }
     }
 
-    public function getReviewDetails($paperId, $submitType)
+    public function getSubmissionReviews($submissionId)
     {
-        //get reviewer's name, rating, comment, time
-        $stmt = $this->conn->prepare("SELECT concat(first_name, ' ', last_name) AS 'name',
-                                      Review_Record.rating AS 'rating', Review_Record.file AS 'comment',
-                                      Review_Record.time AS 'time' FROM Reviewer, Review_Record, Submission
-                                      WHERE Review_Record.reviewer_id = Reviewer.email AND
-                                      Submission.id = Review_Record.submission_id AND
-                                      Submission.type = :submitType AND Submission.paper_id = :paperId");
-        $stmt->bindValue(":submitType", $submitType, PDO::PARAM_INT);
-        $stmt->bindValue(":paperId", $paperId, PDO::PARAM_INT);
-        if ($stmt->execute()) {
-            $stmt->bindColumn("name", $name, PDO::PARAM_STR);
-            $stmt->bindColumn("rating", $rating, PDO::PARAM_INT);
-            $stmt->bindColumn("comment", $comment, PDO::PARAM_LOB);
-            $stmt->bindColumn("time", $time, PDO::PARAM_STR);
-            if ($stmt->fetch(PDO::FETCH_BOUND)) {
-                return array(
-                    "name" => $name,
-                    "rating" => $rating,
-                    "comment" => $comment,
-                    "time" => $time
-                );
+        $sql = "SELECT concat(first_name, ' ', last_name) AS 'reviewerName',
+                Review_Record.rating AS 'rating', Review_Record.completed AS 'completed',
+                (if (Review_Record.completed = TRUE, Review_Record.completed_time, 'N/A')) AS 'time',
+                Review_Record.id AS 'reviewId'
+                FROM Reviewer, Review_Record
+                WHERE Review_Record.reviewer_id = Reviewer.id AND Review_Record.submission_id = :submissionId;";
+
+        try {
+            $stmt = $this->conn->prepare($sql);
+
+            if ($stmt->execute()) {
+                if ($result = $stmt->fetchAll()) {
+                    return $result;
+                } else {
+                    return -1;
+                }
             } else {
                 return -1;
             }
-        } else {
+        } catch (PDOException $e) {
             return -1;
         }
-
     }
 
-    function assignReviewJob($submissionId, $reviewerIds)
+    function assignReviewJob($submissionId)
     {
-        $sql = "INSERT INTO Review_Record (submission_id, reviewer_id) VALUES";
-        $reviewerIdsSize = sizeof($reviewerIds);
-        if (empty($reviewerIds)) {
-            return -1;
-        }
-        for ($i = 0; $i < $reviewerIdsSize; $i++) {
-            $sql .= " (:submissionId" . $i . ", :reviewerId" . $i . ")";
-            if ($i < $reviewerIdsSize - 1) {
-                $sql .= ",";
+        $sql = "INSERT INTO Review_Record (submission_id, reviewer_id)
+                VALUES (:submissionId, (SELECT Reviewer.id FROM Reviewer, Submission, Review_Record
+                WHERE Submission.id = :submissionId AND Review_Record.submission_id = Submission.id
+                AND Review_Record.reviewer_id != Reviewer.id
+                ORDER BY RAND() LIMIT 1))";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindValue(":submissionId", $submissionId, PDO::PARAM_INT);
+            for ($i = 0; $i < 3; $i++) {
+                if (!$stmt->execute()) {
+                    return -1;
+                }
             }
-        }
-        $stmt = $this->conn->prepare($sql);
-        for ($a = 0; $a < $reviewerIds; $a++) {
-            $stmt->bindValue(":submissionId" . $a, $submissionId, PDO::PARAM_INT);
-            $stmt->bindValue(":reviewerId" . $a, $reviewerIds[$a], PDO::PARAM_INT);
-        }
-
-        if ($stmt->execute()) {
             return $stmt->rowCount();
-        } else {
+        } catch (PDOException $e) {
             return -1;
         }
+    }
+
+    function getReviewJobs($reviewerId)
+    {
+        $sql = "SELECT Review_Record.id AS 'reviewId', Paper.title AS 'paperTitle',
+                group_concat(Author.name) AS 'authorsName', assigned_time AS 'assignedTime',
+                submission_id AS 'submissionId', Review_Record.completed AS 'completed',
+                Submission.type AS 'type'
+                FROM Review_Record, Paper, Submission, Author, Author_Paper
+                WHERE Review_Record.submission_id = Submission.id AND Submission.paper_id = Paper.id
+                AND Review_Record.reviewer_id = :reviewerId AND Paper.id = Author_Paper.paper_id
+                AND Author_Paper.author_id = Author.id";
+        try {
+            $allResult = array();
+            $result = array();
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindValue(":reviewerId", $reviewerId, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    array_push($allResult, $result);
+                }
+                return $allResult;
+            } else {
+                return -1;
+            }
+        } catch (PDOException $e) {
+            return -1;
+        }
+
     }
 
     function doReview($reviewRecordId, $filePointer, $fileMime, $rating)
     {
         $reviewSql = "UPDATE Review_Record
-                 SET file = :filePointer, file_mime = :fileMime, rating = :rating,
-                 completed = TRUE
+                 SET file = :filePointer, file_mime = :fileMime, rating = :rating, completed = TRUE
                  WHERE id = :reviewRecordId;";
+
         $subIdSql = "SELECT Submission.id FROM Submission WHERE Submission.id = Review_Record.submission_id
                      AND Review_Record.id = :reviewRecordId";
         try {

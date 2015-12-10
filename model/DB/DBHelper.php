@@ -1,6 +1,6 @@
 <?php
 
-include_once "../util/autoload.php";
+include_once "../model/util/autoload.php";
 
 class DBHelper
 {

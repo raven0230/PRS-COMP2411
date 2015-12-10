@@ -52,4 +52,5 @@ class AuthorDB
             return -1;
         }
     }
+
 }
