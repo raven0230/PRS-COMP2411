@@ -65,6 +65,7 @@ class PaperDB
      */
     public function getPaperList($searchParameter)
     {
+        $allResults = array();
         //Join needed tables
         $sql = "SELECT Paper.id AS 'paper_id', Paper.title AS 'title', group_concat(Author.name) AS 'authors',
                 Paper.status AS 'status'
@@ -184,11 +185,10 @@ class PaperDB
 
         //Execute and get result
         if ($stmt->execute()) {
-            if (!$result = $stmt->fetchAll()) {
-                return $result;
-            } else {
-                return -1;
+            while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                array_push($allResults, $result);
             }
+            return $allResults;
         } else {
             return -1;
         }
